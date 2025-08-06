@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import type { TableItem } from "@/types";
-import { useRouter } from "vue-router";
 import { addNewItem, isValidJson } from "@/utils";
+import { useToast } from "@/composables/useToast";
 
-const router = useRouter();
+const { showSuccess, showError, showWarning } = useToast();
 
 const formData = ref({
   name: "",
@@ -16,13 +16,13 @@ const formData = ref({
 
 const handleSubmit = () => {
   if (!formData.value.name.trim() || !formData.value.version.trim()) {
-    alert("กรุณากรอกชื่อและเวอร์ชัน");
+    showWarning("กรุณากรอกชื่อและเวอร์ชัน");
     return;
   }
 
   // ตรวจสอบ JSON format ถ้ามีข้อมูล
   if (formData.value.jsonData && !isValidJson(formData.value.jsonData)) {
-    alert("รูปแบบ JSON ไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง");
+    showError("รูปแบบ JSON ไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง");
     return;
   }
 
@@ -37,13 +37,13 @@ const handleSubmit = () => {
     });
 
     console.log("Data saved to localStorage:", newItem);
-    alert("บันทึกข้อมูลสำเร็จ!");
+    showSuccess("บันทึกข้อมูลสำเร็จ!");
 
-    resetForm();
-    router.push("/");
+    // resetForm();
+    // router.push("/");
   } catch (error) {
     console.error("Error saving to localStorage:", error);
-    alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+    showError("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
   }
 };
 

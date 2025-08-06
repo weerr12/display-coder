@@ -2,8 +2,10 @@
 import { ref, onMounted } from "vue";
 import type { TableItem } from "@/types";
 import { loadDataFromStorage, deleteItemById } from "@/utils";
+import { useToast } from "@/composables/useToast";
 
 const tableData = ref<TableItem[]>([]);
+const { showSuccess, showError, showWarning } = useToast();
 
 const loadData = () => {
   tableData.value = loadDataFromStorage();
@@ -18,8 +20,9 @@ const deleteItem = (id: number) => {
     const success = deleteItemById(id);
     if (success) {
       loadData(); // โหลดข้อมูลใหม่หลังจากลบ
+      showSuccess("ลบข้อมูลสำเร็จ!");
     } else {
-      alert("เกิดข้อผิดพลาดในการลบข้อมูล");
+      showError("เกิดข้อผิดพลาดในการลบข้อมูล");
     }
   }
 };
@@ -31,7 +34,7 @@ const getSelectedItems = () => {
 const compareSelected = () => {
   const selected = getSelectedItems();
   if (selected.length !== 2) {
-    alert("กรุณาเลือก 2 รายการเท่านั้น ");
+    showWarning("กรุณาเลือก 2 รายการเท่านั้น");
     return;
   }
 

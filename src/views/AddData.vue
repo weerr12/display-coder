@@ -3,9 +3,10 @@ import { ref } from "vue";
 import type { TableItem } from "@/types";
 import { addNewItem, isValidJson } from "@/utils";
 import { useToast } from "@/composables/useToast";
+import { useRouter } from "vue-router";
 
 const { showSuccess, showError, showWarning } = useToast();
-
+const router = useRouter();
 const formData = ref({
   name: "",
   version: "",
@@ -37,10 +38,12 @@ const handleSubmit = () => {
     });
 
     console.log("Data saved to localStorage:", newItem);
-    showSuccess("บันทึกข้อมูลสำเร็จ!");
 
-    // resetForm();
-    // router.push("/");
+    resetForm();
+
+    showSuccess("บันทึกข้อมูลสำเร็จ!", () => {
+      router.push("/");
+    });
   } catch (error) {
     console.error("Error saving to localStorage:", error);
     showError("เกิดข้อผิดพลาดในการบันทึกข้อมูล");

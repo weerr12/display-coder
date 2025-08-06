@@ -15,6 +15,9 @@ app.use(router)
 app.use(Vue3Toastify, {
     autoClose: 3000,
     position: 'top-right',
-    theme: 'auto'
+    theme: 'auto',
+    clearOnUrlChange: false, // ป้องกันไม่ให้ toast หายเมื่อเปลี่ยน URL
+    newestOnTop: true,
+    pauseOnHover: true
 } as ToastContainerOptions)
 app.mount('#app')
